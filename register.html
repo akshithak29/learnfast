@@ -192,14 +192,38 @@
 
             // Update form title based on selected course
             const formTitle = document.getElementById('form-title');
-            const courseText = courseSelect.options[courseSelect.selectedIndex].text;
-            if (courseText && courseText !== '-- Choose a Course --') {
-                formTitle.textContent = `Enroll in: ${courseText}`;
+            const courseSelectElement = document.getElementById('course'); // Get the select element
+            courseSelectElement.addEventListener('change', function() { // Add event listener for changes
+                const courseText = courseSelectElement.options[courseSelectElement.selectedIndex].text;
+                if (courseText && courseText !== '-- Choose a Course --') {
+                    formTitle.textContent = `Enroll in: ${courseText}`;
+                } else {
+                    formTitle.textContent = `Enroll in Your Course`; // Reset if no course is selected
+                }
+            });
+
+            // Initial update in case a course is pre-selected on load
+            const initialCourseText = courseSelectElement.options[courseSelectElement.selectedIndex].text;
+            if (initialCourseText && initialCourseText !== '-- Choose a Course --') {
+                formTitle.textContent = `Enroll in: ${initialCourseText}`;
             }
+
 
             // Handle form submission (client-side redirect only)
             document.getElementById('registrationForm').addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevent actual form submission
+                
+                // You can add basic form validation here before redirecting
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+                const course = document.getElementById('course').value;
+
+                if (!name || !email || !phone || !course) {
+                    alert('Please fill in all required fields.');
+                    return; // Stop the redirect if validation fails
+                }
+
                 window.location.href = 'confirmation.html'; // Redirect to confirmation page
             });
         });
