@@ -181,50 +181,51 @@
     </footer>
 
     <script>
-        // Get the course selected from the URL (if any)
         document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const selectedCourse = urlParams.get('course');
-            if (selectedCourse) {
-                const courseSelect = document.getElementById('course');
-                courseSelect.value = selectedCourse; // Set the selected option
-            }
-
-            // Update form title based on selected course
+            const courseSelectElement = document.getElementById('course');
             const formTitle = document.getElementById('form-title');
-            const courseSelectElement = document.getElementById('course'); // Get the select element
-            courseSelectElement.addEventListener('change', function() { // Add event listener for changes
-                const courseText = courseSelectElement.options[courseSelectElement.selectedIndex].text;
-                if (courseText && courseText !== '-- Choose a Course --') {
-                    formTitle.textContent = `Enroll in: ${courseText}`;
-                } else {
-                    formTitle.textContent = `Enroll in Your Course`; // Reset if no course is selected
-                }
-            });
+            const registrationForm = document.getElementById('registrationForm');
 
-            // Initial update in case a course is pre-selected on load
-            const initialCourseText = courseSelectElement.options[courseSelectElement.selectedIndex].text;
-            if (initialCourseText && initialCourseText !== '-- Choose a Course --') {
-                formTitle.textContent = `Enroll in: ${initialCourseText}`;
+            // Function to update the form title based on selected course
+            function updateFormTitle() {
+                const selectedOptionText = courseSelectElement.options[courseSelectElement.selectedIndex].text;
+                if (selectedOptionText && selectedOptionText !== '-- Choose a Course --') {
+                    formTitle.textContent = `Enroll in: ${selectedOptionText}`;
+                } else {
+                    formTitle.textContent = `Enroll in Your Course`;
+                }
             }
 
+            // Get the course selected from the URL (if any) and set it
+            const urlParams = new URLSearchParams(window.location.search);
+            const selectedCourseFromUrl = urlParams.get('course');
+            if (selectedCourseFromUrl) {
+                courseSelectElement.value = selectedCourseFromUrl;
+            }
+            
+            // Initial update of the form title on page load
+            updateFormTitle();
+
+            // Add event listener for changes to the course dropdown
+            courseSelectElement.addEventListener('change', updateFormTitle);
 
             // Handle form submission (client-side redirect only)
-            document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            registrationForm.addEventListener('submit', function(event) {
                 event.preventDefault(); // Prevent actual form submission
-                
-                // You can add basic form validation here before redirecting
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const phone = document.getElementById('phone').value;
+
+                // Basic client-side validation
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
                 const course = document.getElementById('course').value;
 
                 if (!name || !email || !phone || !course) {
-                    alert('Please fill in all required fields.');
-                    return; // Stop the redirect if validation fails
+                    alert('Please fill in all required fields to register.');
+                    return; // Stop the function if validation fails
                 }
 
-                window.location.href = 'thankyou.html'; // Redirect to confirmation page
+                // If validation passes, redirect to the thank you page
+                window.location.href = 'thankyou.html'; // <<< UPDATED THIS LINE
             });
         });
     </script>
